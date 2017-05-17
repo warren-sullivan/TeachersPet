@@ -2,3 +2,4 @@
 School project
 
 ## Students
+Derek Lee
