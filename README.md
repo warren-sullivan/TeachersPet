@@ -2,4 +2,6 @@
 School project
 
 ## Students
-* Guangyuan Cai
+Guangyuan Cai
+Kerry Champ
+Warren Sullivan
