@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {StudentsList} from "../students-list/students-list";
 
 /**
  * Generated class for the LoginPage page.
@@ -20,5 +21,7 @@ export class LoginPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
   }
-
+  navToStudentsList(){
+    this.navCtrl.push(StudentsList);
+  }
 }
