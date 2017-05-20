@@ -10,12 +10,14 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { DataService } from '../providers/data-service';
+import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example'; // used for example usage and testing
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    ListPage
+    ListPage,
+    DataServiceExamplePage
   ],
   imports: [
     BrowserModule,
@@ -25,7 +27,8 @@ import { DataService } from '../providers/data-service';
   entryComponents: [
     MyApp,
     HomePage,
-    ListPage
+    ListPage,
+    DataServiceExamplePage
   ],
   providers: [
     StatusBar,
