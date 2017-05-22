@@ -1,18 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { StudentDetail } from "../student-detail/student-detail";
 
-/**
- * Generated class for the StudentsList page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+
 @IonicPage()
 @Component({
   selector: 'page-students-list',
   templateUrl: 'students-list.html',
 })
-export class StudentsList implements OnInit{
+export class StudentsList implements OnInit {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
@@ -21,8 +17,11 @@ export class StudentsList implements OnInit{
     console.log('ionViewDidLoad StudentsList');
   }
 
+  ngOnInit() {
 
-  ngOnInit(){
+  }
 
+  navToStudentDetail() {
+    this.navCtrl.push(StudentDetail);
   }
 }
