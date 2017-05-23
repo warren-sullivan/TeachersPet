@@ -18,7 +18,8 @@ export class StudentsList implements OnInit {
   }
 
   ngOnInit() {
-
+    //this.aaronAndWarrensService.getStudents().subscribe(data => { 
+    //  this.students = data;
   }
 
   navToStudentDetail() {
