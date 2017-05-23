@@ -14,13 +14,17 @@ import { ClassService } from '../providers/class-service';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { DataService } from '../providers/data-service';
+import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example'; // used for example usage and testing
+
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
     ClassListPage,
-    ClassCreationPage
+    ClassCreationPage,
+    DataServiceExamplePage
   ],
   imports: [
     BrowserModule,
@@ -33,13 +37,16 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     ListPage,
     ClassListPage,
-    ClassCreationPage
+    ClassCreationPage,
+    DataServiceExamplePage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ClassService
+    ClassService,
+    DataService,
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}
