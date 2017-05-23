@@ -1,10 +1,41 @@
-before_script:
-- npm install -g cordova ionic
-- npm install
-script: ionic build
+sudo: false
+
 language: node_js
+
 node_js:
 - node
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+    - openjdk-7-jdk
+    - lib32stdc++6
+    - lib32z1
+
+env:
+  CXX=g++-4.8
+
+install:
+  - npm install -g cordova ionic
+  - npm install
+
+script: ionic cordova build android
+
 before_install:
-- openssl aes-256-cbc -K $encrypted_0c73d57bebb9_key -iv $encrypted_0c73d57bebb9_iv
-  -in keys.js.enc -out keys.js -d
+  - openssl aes-256-cbc -K $encrypted_0c73d57bebb9_key -iv $encrypted_0c73d57bebb9_iv
+    -in keys.js.enc -out keys.js -d
+
+before_script:
+  - wget http://dl.google.com/android/android-sdk_r24.4-linux.tgz
+  - tar -xvf android-sdk_r24.4-linux.tgz
+  - echo y | ./android-sdk-linux/tools/android update sdk --no-ui --all --filter platform-tools
+  - echo y | ./android-sdk-linux/tools/android update sdk --no-ui --all --filter build-tools-23.0.2
+  - echo y | ./android-sdk-linux/tools/android update sdk --no-ui --all --filter android-23
+  - echo y | ./android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-support
+  - echo y | ./android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-m2repository
+  - echo y | ./android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-google-m2repository
+  - export ANDROID_HOME=$PWD/android-sdk-linux
+  - export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/23.0.2
