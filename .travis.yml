@@ -1,0 +1,8 @@
+before_script:
+  - npm install -g cordova ionic
+  - npm install
+script: ionic build
+language: node_js
+node_js:
+  - "5.1"
+  
