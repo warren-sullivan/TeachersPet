@@ -4,5 +4,5 @@ before_script:
 script: ionic build
 language: node_js
 node_js:
-  - "5.1"
+  - "node"
   
