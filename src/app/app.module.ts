@@ -20,7 +20,8 @@ import { StudentsList } from "../pages/students-list/students-list";
 import { StudentDetail } from "../pages/student-detail/student-detail";
 
 import { DataService } from '../providers/data-service';
-import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example'; // used for example usage and testing
+import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example';
+import {StudentCreation} from "../pages/student-creation/student-creation"; // used for example usage and testing
 
 
 @NgModule({
@@ -32,7 +33,7 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     LoginPage,
     StudentsList,
     StudentDetail,
-
+    StudentCreation,
     ClassListPage,
     ClassCreationPage,
     DataServiceExamplePage
@@ -52,6 +53,7 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     LoginPage,
     StudentsList,
     StudentDetail,
+    StudentCreation,
 
     ClassListPage,
     ClassCreationPage,
