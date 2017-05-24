@@ -17,7 +17,7 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = DataServiceExamplePage;
+  rootPage: any = HomePage;
 
   pages: Array<{title: string, component: any}>;
 
