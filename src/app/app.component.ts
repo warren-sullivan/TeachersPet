@@ -5,7 +5,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
+
+import {LoginPage} from "../pages/login-page/login-page";
+
 import { ClassListPage } from '../pages/class-list/class-list';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -13,7 +17,7 @@ import { ClassListPage } from '../pages/class-list/class-list';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any = LoginPage;
 
   pages: Array<{title: string, component: any}>;
 
