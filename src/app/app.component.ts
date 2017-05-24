@@ -5,10 +5,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
+
+import {LoginPage} from "../pages/login-page/login-page";
+
 import { ClassListPage } from '../pages/class-list/class-list';
+
 
 // for testing purposes, please remove later
 import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example'; // used for example usage and testing
+
 
 
 @Component({
@@ -17,7 +22,7 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any = LoginPage;
 
   pages: Array<{title: string, component: any}>;
 

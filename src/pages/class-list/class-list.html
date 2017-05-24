@@ -14,7 +14,7 @@
 <ion-content>
 
   <ion-list inset>
-    <button ion-item *ngFor="let class of classes" (click)="classSelected(class)">
+    <button ion-item *ngFor="let class of classes" (click)="classSelected()">
           <ion-checkbox *ngIf="deleteToggle"[(ngModel)]="class.selected"></ion-checkbox>
             {{class.name}}
         </button>
