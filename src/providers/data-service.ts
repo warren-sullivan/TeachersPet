@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import * as keys from '../../keys';
 
+import { Observable } from 'rxjs/Observable';
+
 @Injectable()
 export class DataService {
 
@@ -18,6 +20,25 @@ export class DataService {
         resolve(studentArray);
       }).catch(e => reject("problems loading student list"));
     });
+  }
+
+  getUser(): Observable<any>{
+    return Observable.create(observer => {
+      firebase.auth().onAuthStateChanged(user => {
+        observer.next(user);
+      })
+    })
+
+  }
+
+  signIn(){
+      let provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithRedirect(provider);
+ 
+  }
+
+  signOut(){
+      firebase.auth().signOut();
   }
 
   private studentMap(jsonObj: any): Student{

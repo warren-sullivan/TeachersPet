@@ -7,13 +7,17 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { ClassListPage } from '../pages/class-list/class-list';
 
+// for testing purposes, please remove later
+import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example'; // used for example usage and testing
+
+
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any = DataServiceExamplePage;
 
   pages: Array<{title: string, component: any}>;
 
