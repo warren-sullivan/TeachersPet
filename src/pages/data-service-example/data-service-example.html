@@ -14,5 +14,10 @@
 
 
 <ion-content padding>
+  <button (click)="signIn()" ion-button>Sign In</button>
+  <button (click)="signOut()" ion-button>Sign Out</button>
+  <button (click)="getStudentList()" ion-button>Get Student List</button>
+
+<p *ngIf="signedIn">Logged In</p>
 
 </ion-content>
