@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 
 import { ClassCreationPage } from '../class-creation/class-creation';
 import { ClassService } from '../../providers/class-service';
+import {StudentsList} from "../students-list/students-list";
 
 @Component({
     selector: 'page-class',
@@ -38,6 +39,11 @@ export class ClassListPage implements OnInit {
           console.log(this.classes[i].name);
         }
       }
+    }
+
+    classSelected()
+    {
+      this.navCtrl.push(StudentsList);
     }
 
     ngOnInit(){
