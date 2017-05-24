@@ -14,17 +14,29 @@ import { ClassService } from '../providers/class-service';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+
+import { LoginPage } from "../pages/login-page/login-page";
+import { StudentsList } from "../pages/students-list/students-list";
+import { StudentDetail } from "../pages/student-detail/student-detail";
+
 import { DataService } from '../providers/data-service';
 import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example'; // used for example usage and testing
+
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
+
+    LoginPage,
+    StudentsList,
+    StudentDetail,
+
     ClassListPage,
     ClassCreationPage,
     DataServiceExamplePage
+
   ],
   imports: [
     BrowserModule,
@@ -36,17 +48,27 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     MyApp,
     HomePage,
     ListPage,
+
+    LoginPage,
+    StudentsList,
+    StudentDetail,
+
     ClassListPage,
     ClassCreationPage,
     DataServiceExamplePage
+
   ],
   providers: [
     StatusBar,
     SplashScreen,
+
+
+
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ClassService,
     DataService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
+
   ]
 })
-export class AppModule {}
+export class AppModule { }
