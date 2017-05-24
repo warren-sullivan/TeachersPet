@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/robinsonaaron/TeachersPet.svg?branch=master)](https://travis-ci.org/robinsonaaron/TeachersPet)
+
 # TeachersPet
 School project
 
