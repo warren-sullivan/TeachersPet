@@ -20,7 +20,8 @@ import { StudentsList } from "../pages/students-list/students-list";
 import { StudentDetail } from "../pages/student-detail/student-detail";
 
 import { DataService } from '../providers/data-service';
-import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example'; // used for example usage and testing
+import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example';
+import { ImageServiceProvider } from '../providers/image-service/image-service'; // used for example usage and testing
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ClassService,
     DataService,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    ImageServiceProvider
 
   ]
 })

@@ -24731,3 +24731,9 @@ ion-navbar.toolbar {
     padding-top: calc(16px + 20px);
   }
 }
+
+page-class-list #trashcan {
+  font-size: 28px;
+  float: right;
+  padding-right: 15px;
+}
