@@ -9,6 +9,11 @@ import { LoginPage } from "../pages/login-page/login-page";
 import { ClassListPage } from '../pages/class-list/class-list';
 import { AssignmentsPage } from '../pages/assignments/assignments';
 
+// for testing purposes, please remove later
+import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example'; // used for example usage and testing
+
+
+
 @Component({
   templateUrl: 'app.html'
 })
