@@ -13,7 +13,65 @@ export class DataService {
     firebase.initializeApp(keys.firebaseConfig);
   }
 
-  getStudents(): Promise<Student[]> {
+  /** returns a user object if already signed in.  Returns null if not signed in. */
+  getUserAuthStatus(): Observable<any>{
+    return Observable.create(observer => {
+      firebase.auth().onAuthStateChanged(user => {
+        observer.next(user);
+      })
+    })
+  }
+
+  /** Set to sign a user in using google .  Doesn't give feedback on if it worked.  That is the job of geUserAuthStatus to do */
+  signIn(){
+      let provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithRedirect(provider);
+  }
+
+  /** Signs the user out from google authentication.  Feeback isn't displayed here, but rather in the getUserAuthStatus observable. */
+  signOut(){
+      firebase.auth().signOut();
+  }
+
+  /** returns the name of the class */
+  getClass(): string {
+    return this.className;
+  }
+
+  /** sets the class name to query on */
+  setClass(className: string): null {
+    this.className = className;
+    return null;
+  }
+
+  /** add the name of a class.  Returns  nothing when done. */
+  addClass(className: string, teacher:any){
+    console.log(teacher);
+    return new Promise((resolve, reject) => {
+     firebase.database().ref().child(className).set({'Instructor': teacher.uid}).then(data => {
+        resolve("finished");
+      }).catch(error => {
+        reject(error);
+      });
+    })
+  }
+
+  /** well if you have to ask, it gets a list of classes. */
+  getClassList(teacherUID?: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref().once('value', snapshot => {
+        let nameList: string[] = [];
+        snapshot.forEach(childSnapshot => {
+          nameList.push(childSnapshot.key);
+          return false;
+        });
+        resolve(nameList);
+      }).catch(error => resolve(error));
+    })
+   }
+
+  /** returns the list of students */
+  getStudentList(): Promise<Student[]> {
     return new Promise((resolve, reject) => {
       firebase.database().ref(this.className + '/StudentList').once('value', (snapshot) => {
         let studentArray: Student[] = [];
@@ -24,24 +82,63 @@ export class DataService {
   }
 
 
-  getUser(): Observable<any>{
-    return Observable.create(observer => {
-      firebase.auth().onAuthStateChanged(user => {
-        observer.next(user);
-      })
-    })
+  /** gets the list of assignemnts.  If a student is passed in, it gets the grades a and dates submitted as well.  Otherwise those values are null */
+  getAssignmentList(student?: Student): Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref(this.className + '/AssignmentList').once('value', (snapshot) => {
+        let assignmentArray: Assignment[] = [];
+        snapshot.forEach(childSnapshot => { assignmentArray.push(this.assignmentMap(childSnapshot.val())); return false; });
+        resolve(assignmentArray);
+      }).catch(e => reject("problems loading assignment list"));
+    });
+  }
+
+
+  /** This will add to the assignment list.  Individual student grades will be ignored and not stored .  Use SubmitGrade for that functionality */
+  addAssignment(assignemnt: Assignment){
 
   }
 
-  signIn(){
-      let provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithRedirect(provider);
- 
+  /** this will remove an assignemtn  from the assignment list.  This doesn't  remove an individual students grade. */
+  removeAssignment(assignment: Assignment){
+
   }
 
-  signOut(){
-      firebase.auth().signOut();
+  /** Will find the assignment based on key, and make changes in the database. */
+  updateAssignment(assignment: Assignment) {
+
   }
+
+  /** this will be used to  add a student.  Make the student object and send it on its way. */
+  addStudent(student: Student){
+
+  }
+
+  /** this will remove a student */
+  removeStudent(student: Student): void {
+    return null;
+  }
+
+  /** make changes to a student.  This will find the object based on a key and make the changes based on the object passed in. */
+  updateStudent(student: Student){
+
+  }
+
+  /** This is where we will put the points and date submitted for each grstudent and the grade they received. */
+  submitGrade(student: Student, assignemnt: Assignment, pointsScored: number, dateSubmittedInTicks: number){
+
+  }
+
+  removeGrade(student: Student, assignment: Assignment): void {
+    return null;
+  }
+
+
+
+
+
+
+
 
   private studentMap(jsonObj: any): Student {
     let student = {
@@ -69,15 +166,7 @@ export class DataService {
     }
   }
 
-  getAssignments(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      firebase.database().ref(this.className + '/AssignmentList').once('value', (snapshot) => {
-        let assignmentArray: Assignment[] = [];
-        snapshot.forEach(childSnapshot => { assignmentArray.push(this.assignmentMap(childSnapshot.val())); return false; });
-        resolve(assignmentArray);
-      }).catch(e => reject("problems loading assignment list"));
-    });
-  }
+
 
   private assignmentMap(jsonObj: any): Assignment {
     return {
@@ -91,60 +180,6 @@ export class DataService {
     };
   }
 
-
-
-  //Retuns an array of objects, one for each student
-  //Each object contains the student's unique key
-  //and each student's assignmentData for that assignment
-  getAssignmentDataFromStudents(students: Student[], assignment: Assignment): Object[] {
-    let dataArray: Object[] = [];
-    students.forEach(student => {
-      student.Assignments.forEach(assignmentData => {
-        if (assignmentData.Key == assignment.Key) {
-          let tempStr: string = student.Key;
-          dataArray.push({ tempStr, assignmentData });
-        }
-      })
-    });
-    return dataArray;
-  }
-
-  //Retuns an array of objects, one for each assignment
-  //Each object contains each assignment's unique key
-  //and the student's assignmentData for that assignment
-  listStudentAssignments(assignments: Assignment[], student: Student): Object[] {
-    let dataArray: Object[] = [];
-    student.Assignments.forEach(assignmentData => {
-      assignments.forEach(assignment => {
-        if (assignmentData.Key == assignment.Key) {
-          let tempStr: string = assignment.Key;
-          dataArray.push({ tempStr, assignmentData });
-        }
-      })
-    });
-    return dataArray;
-  }
-
-
-
-  deleteStudent(studentKey: string): void {
-    return null;
-  }
-
-  deleteAssignment(assignmentKey: string): void {
-    return null;
-  }
-
-
-
-  getClass(): string {
-    return this.className;
-  }
-
-  setClass(className: string): null {
-    this.className = className;
-    return null;
-  }
 }
 
 interface Student {

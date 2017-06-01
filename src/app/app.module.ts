@@ -10,7 +10,6 @@ import { ClassListPage } from '../pages/class-list/class-list';
 import { ClassCreationPage } from '../pages/class-creation/class-creation';
 
 import { ClassService } from '../providers/class-service';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -21,7 +20,6 @@ import { StudentDetail } from "../pages/student-detail/student-detail";
 
 import { DataService } from '../providers/data-service';
 import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example';
-import { ImageServiceProvider } from '../providers/image-service/image-service'; // used for example usage and testing
 
 
 @NgModule({
@@ -68,8 +66,7 @@ import { ImageServiceProvider } from '../providers/image-service/image-service';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ClassService,
     DataService,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ImageServiceProvider
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
 
   ]
 })

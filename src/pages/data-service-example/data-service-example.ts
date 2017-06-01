@@ -11,17 +11,20 @@ import { DataService } from '../../providers/data-service';
 export class DataServiceExamplePage {
 
   signedIn: boolean = false;
+  user: any = null;
 
   constructor(public dataService: DataService, public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    this.dataService.getUser().subscribe(user => console.log(user)
-    );
+    this.dataService.getUserAuthStatus().subscribe(user => {
+      console.log(user)
+      this.user = user;
+    });
   }
 
   getStudentList(){
-    this.dataService.getStudents()
+    this.dataService.getStudentList()
     .then(students => console.log(students));
 
   }
@@ -34,6 +37,16 @@ export class DataServiceExamplePage {
   signOut(){
     this.dataService.signOut();
 
+  }
+
+  addClass(){
+    if(this.user)
+      this.dataService.addClass("This Is a class", this.user);
+
+  }
+
+  getClassList() {
+    this.dataService.getClassList().then(data => console.log(data));
   }
 
 }
