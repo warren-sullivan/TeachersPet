@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-import { DataService } from '../../providers/data-service';
+import { DataService, Assignment, Student } from '../../providers/data-service';
 
 
 @Component({
@@ -46,7 +46,30 @@ export class DataServiceExamplePage {
   }
 
   getClassList() {
-    this.dataService.getClassList().then(data => console.log(data));
+    this.dataService.getClassList(this.user).then(data => console.log(data));
+  }
+
+//   interface Assignment {
+//   Key: string,
+//   Title: string,
+//   PointsPossible: number,
+//   Description: string,
+//   DueDate: Date,
+//   DateAssigned: Date,
+//   GithubLink: URL
+// }
+
+  addAssignment(){
+    let assignment:Assignment = new Assignment();
+
+      assignment.Title = 'This is a test title';
+      assignment.PointsPossible = 10;
+      assignment.Description = "purple monkey trees, hows that for a description?";
+      assignment.DueDate = '123456789';
+      assignment.DateAssigned = '123456789';
+      assignment.GithubLink = 'www.github.com/mybutt';
+
+    this.dataService.addAssignment(assignment);
   }
 
 }

@@ -35,7 +35,6 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     ClassListPage,
     ClassCreationPage,
     DataServiceExamplePage
-
   ],
   imports: [
     BrowserModule,

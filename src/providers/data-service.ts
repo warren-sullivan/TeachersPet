@@ -46,7 +46,7 @@ export class DataService {
 
   /** add the name of a class.  Returns  nothing when done. */
   addClass(className: string, teacher:any){
-    console.log(teacher);
+   // console.log(teacher);
     return new Promise((resolve, reject) => {
      firebase.database().ref().child(className).set({'Instructor': teacher.uid}).then(data => {
         resolve("finished");
@@ -57,11 +57,12 @@ export class DataService {
   }
 
   /** well if you have to ask, it gets a list of classes. */
-  getClassList(teacherUID?: string): Promise<string[]> {
+  getClassList(teacher?: any): Promise<string[]> {
     return new Promise((resolve, reject) => {
       firebase.database().ref().once('value', snapshot => {
         let nameList: string[] = [];
         snapshot.forEach(childSnapshot => {
+          if(!teacher || childSnapshot.val().Instructor == teacher.uid)
           nameList.push(childSnapshot.key);
           return false;
         });
@@ -94,9 +95,27 @@ export class DataService {
   }
 
 
-  /** This will add to the assignment list.  Individual student grades will be ignored and not stored .  Use SubmitGrade for that functionality */
-  addAssignment(assignemnt: Assignment){
+  /** This will add to the assignment list.  Individual student grades will be ignored and not stored .  Use SubmitGrade for that functionality.  This function returns null on complete*/
+  addAssignment(assignment: Assignment):Promise<any>{
+    return new Promise((resolve, reject) => {
+      let fbObject = firebase.database().ref(this.className + "/AssignmentList").push();
+      //.catch(error => reject(error));
 
+      let dataToStore = {
+        'DateAssigned': assignment.DateAssigned,
+        'Description' : assignment.Description,
+        'DueDate'     : assignment.DueDate,
+        'GithubLink'  : assignment.GithubLink,
+        'Key'         : fbObject.key,
+        'PointsPossible': assignment.PointsPossible,
+        'Title'       : assignment.Title
+      }
+
+      fbObject.set(dataToStore).then(data => {
+       // console.log("done");
+        resolve(data);
+      }).catch(error => reject(error));
+    });
   }
 
   /** this will remove an assignemtn  from the assignment list.  This doesn't  remove an individual students grade. */
@@ -182,28 +201,31 @@ export class DataService {
 
 }
 
-interface Student {
-  Key: string,
-  Name: string,
-  Email: string,
-  Github: URL,
-  Slack: URL,
-  Image: URL,
-  Assignments: AssignmentData[]
+//namespace DataServiceType {
+
+export class Student {
+  Key: string;
+  Name: string;
+  Email: string;
+  Github: URL;
+  Slack: URL;
+  Image: URL;
 }
 
-interface Assignment {
-  Key: string,
-  Title: string,
-  PointsPossible: number,
-  Description: string,
-  DueDate: Date,
-  DateAssigned: Date,
-  GithubLink: URL
+export class Assignment {
+  Key: string;
+  Title: string;
+  PointsPossible: number;
+  Description: string;
+  DueDate: string;
+  DateAssigned: string;
+  GithubLink: string;
 }
 
-interface AssignmentData {
-  Key: string,
-  PointsScored: number,
-  DateSubmitted: Date,
+export class AssignmentData {
+  Key: string;
+  PointsScored: number;
+  DateSubmitted: string;
 }
+
+//}
