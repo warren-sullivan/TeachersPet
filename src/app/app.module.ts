@@ -17,6 +17,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from "../pages/login-page/login-page";
 import { StudentsList } from "../pages/students-list/students-list";
 import { StudentDetail } from "../pages/student-detail/student-detail";
+import { AssignmentsPage } from "../pages/assignments/assignments";
 
 import { DataService } from '../providers/data-service';
 import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example';
@@ -27,14 +28,15 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     MyApp,
     HomePage,
     ListPage,
-
     LoginPage,
     StudentsList,
     StudentDetail,
-
     ClassListPage,
     ClassCreationPage,
-    DataServiceExamplePage
+
+    DataServiceExamplePage,
+    AssignmentsPage
+
   ],
   imports: [
     BrowserModule,
@@ -46,26 +48,20 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     MyApp,
     HomePage,
     ListPage,
-
     LoginPage,
     StudentsList,
     StudentDetail,
-
     ClassListPage,
     ClassCreationPage,
-    DataServiceExamplePage
-
+    DataServiceExamplePage,
+    AssignmentsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-
-
-
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
     ClassService,
-    DataService,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    DataService
 
   ]
 })

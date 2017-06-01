@@ -83,6 +83,7 @@ export class DataService {
   }
 
 
+
   /** gets the list of assignemnts.  If a student is passed in, it gets the grades a and dates submitted as well.  Otherwise those values are null */
   getAssignmentList(student?: Student): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -95,11 +96,14 @@ export class DataService {
   }
 
 
+
+
+
   /** This will add to the assignment list.  Individual student grades will be ignored and not stored .  Use SubmitGrade for that functionality.  This function returns null on complete*/
   addAssignment(assignment: Assignment):Promise<any>{
     return new Promise((resolve, reject) => {
-      let fbObject = firebase.database().ref(this.className + "/AssignmentList").push();
-      //.catch(error => reject(error));
+      let fbObject = firebase.database().ref(this.className + "/AssignmentList").push()
+      .catch(error => reject(error));
 
       let dataToStore = {
         'DateAssigned': assignment.DateAssigned,
@@ -156,9 +160,6 @@ export class DataService {
 
 
 
-
-
-
   private studentMap(jsonObj: any): Student {
     let student = {
       Name: jsonObj.Name,
@@ -201,7 +202,7 @@ export class DataService {
 
 }
 
-//namespace DataServiceType {
+
 
 export class Student {
   Key: string;
@@ -228,4 +229,4 @@ export class AssignmentData {
   DateSubmitted: string;
 }
 
-//}
+
