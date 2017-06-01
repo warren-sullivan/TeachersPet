@@ -20,7 +20,8 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = DataServiceExamplePage;
+  // rootPage: any = DataServiceExamplePage // used for testing
+  rootPage: any = LoginPage;
 
   pages: Array<{ title: string, component: any }>;
 
