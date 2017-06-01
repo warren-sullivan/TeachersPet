@@ -34,7 +34,7 @@ export class AssignmentsPage implements OnInit {
   }
 
   getAssignments() {
-    this.dataService.getAssignments()
+    this.dataService.getAssignmentList()
     .then(res => this.assignments = res);
   }
 
