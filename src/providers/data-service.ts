@@ -24,7 +24,7 @@ export class DataService {
   }
 
 
-  getUser(): Observable<any>{
+  getUser(): Observable<any> {
     return Observable.create(observer => {
       firebase.auth().onAuthStateChanged(user => {
         observer.next(user);
@@ -33,14 +33,14 @@ export class DataService {
 
   }
 
-  signIn(){
-      let provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithRedirect(provider);
- 
+  signIn() {
+    let provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+
   }
 
-  signOut(){
-      firebase.auth().signOut();
+  signOut() {
+    firebase.auth().signOut();
   }
 
   private studentMap(jsonObj: any): Student {
