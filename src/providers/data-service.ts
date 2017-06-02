@@ -38,20 +38,27 @@ export class DataService {
     return this.className;
   }
 
-  /** sets the class name to query on */
-  setClass(className: string): null {
-    this.className = className;
-    return null;
+  /** sets the class name to query on, verifies if exists.  Throws error if it does not */
+  setClass(className: string) : Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref().child(className).once('value', snapshot => {
+        if(snapshot.val()){
+          this.className = className;
+          resolve("this classname is legit");
+        }else
+          reject("this class name is bogus.");
+      });
+    });
   }
 
   /** add the name of a class.  Returns  nothing when done. */
-  addClass(className: string, teacher:any){
+  addClass(className: string, teacher:any):Promise<any>{
    // console.log(teacher);
     return new Promise((resolve, reject) => {
      firebase.database().ref().child(className).set({'Instructor': teacher.uid}).then(data => {
         resolve("finished");
       }).catch(error => {
-        reject(error);
+        reject(error.message);
       });
     })
   }
@@ -67,7 +74,7 @@ export class DataService {
           return false;
         });
         resolve(nameList);
-      }).catch(error => resolve(error));
+      }).catch(error => resolve(error.message));
     })
    }
 
@@ -102,89 +109,149 @@ export class DataService {
   /** This will add to the assignment list.  Individual student grades will be ignored and not stored .  Use SubmitGrade for that functionality.  This function returns null on complete*/
   addAssignment(assignment: Assignment):Promise<any>{
     return new Promise((resolve, reject) => {
-      let fbObject = firebase.database().ref(this.className + "/AssignmentList").push()
-      .catch(error => reject(error));
+      let fbObject = firebase.database().ref(this.className + "/AssignmentList").push();
 
-      let dataToStore = {
-        'DateAssigned': assignment.DateAssigned,
-        'Description' : assignment.Description,
-        'DueDate'     : assignment.DueDate,
-        'GithubLink'  : assignment.GithubLink,
-        'Key'         : fbObject.key,
-        'PointsPossible': assignment.PointsPossible,
-        'Title'       : assignment.Title
-      }
+      let dataToStore = this.assignmentToFbAssignment(assignment);
+      dataToStore.Key = fbObject.key;
 
       fbObject.set(dataToStore).then(data => {
-       // console.log("done");
         resolve(data);
-      }).catch(error => reject(error));
+      }).catch(error => reject(error.message));
     });
   }
 
   /** this will remove an assignemtn  from the assignment list.  This doesn't  remove an individual students grade. */
-  removeAssignment(assignment: Assignment){
+  removeAssignment(assignment: Assignment):Promise<any>{
+    return new Promise((resolve, reject) => {
+      let key: string = assignment.Key;
 
+      firebase.database().ref(this.className + "/AssignmentList/" + key).remove().catch(error => reject(error.message));
+      firebase.database().ref(this.className + "/Submissions").equalTo('AssignmentID', key).once('value', data => {
+        data.forEach(childData => {
+          let subKey = childData.key;
+          firebase.database().ref(this.className + "/Submissions/" + subKey).remove().catch(error => reject(error.message));
+          return false;
+        })
+        resolve("assignment deleted");
+      })
+    });
   }
 
   /** Will find the assignment based on key, and make changes in the database. */
-  updateAssignment(assignment: Assignment) {
-
+  updateAssignment(assignment: Assignment): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let fbAssignment = this.assignmentToFbAssignment(assignment);
+      firebase.database().ref(this.className + "/AssignmentList/" + assignment.Key).set(fbAssignment, (data) => {
+        resolve("done");
+      }).catch(error => reject(error.message));
+    });
   }
 
   /** this will be used to  add a student.  Make the student object and send it on its way. */
-  addStudent(student: Student){
-
+  addStudent(student: Student): Promise<any>{
+    return new Promise((resolve, reject) => {
+      let fbObject = firebase.database().ref(this.className + "/StudentList").push();
+      student.Key = fbObject.key;
+      fbObject.set(student)
+      .then(snapshot => resolve("added"))
+      .catch(error => reject(error.message));
+    });
   }
 
   /** this will remove a student */
-  removeStudent(student: Student): void {
-    return null;
+  removeStudent(student: Student): Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref(this.className + "/StudentList/" + student.Key).remove().catch(error => reject(error.message));
+      firebase.database().ref(this.className + "/Submissions").equalTo('StudentID', student.Key).once('value', snapshot => {
+        snapshot.forEach(childSnap => {
+          let subKey = childSnap.key;
+          firebase.database().ref(this.className + "/Submissions/" + subKey).remove().catch(error => reject(error.message));
+          return false;
+        });
+        resolve("removal complete");
+      }).catch(error => reject(error.message));
+    });
   }
 
   /** make changes to a student.  This will find the object based on a key and make the changes based on the object passed in. */
-  updateStudent(student: Student){
-
+  updateStudent(student: Student): Promise<any>{
+    return new Promise((resolve, reject) => {
+      firebase.database().ref(this.className + "/StudentList/" + student.Key).update(student)
+      .then(data => resolve("update complete"))
+      .catch(error => reject(error.message));
+    });
   }
 
   /** This is where we will put the points and date submitted for each grstudent and the grade they received. */
-  submitGrade(student: Student, assignemnt: Assignment, pointsScored: number, dateSubmittedInTicks: number){
+  submitGrade(student: Student, assignment: Assignment, pointsScored: number, dateSubmittedInTicks: number): Promise<any>{
+    return new Promise((resolve, reject) => {
+      let fbObject = firebase.database().ref(this.className + "/Submissions").push();
 
+      let grade = {
+        'StudentID': student.Key,
+        'AssignmentID' : assignment.Key,
+        'Points' : pointsScored,
+        'DateSubmitted' : dateSubmittedInTicks
+      }
+
+      fbObject.set(grade)
+      .then(data => resolve("grade submitted"))
+      .catch(error => reject(error.message));
+    });
   }
 
-  removeGrade(student: Student, assignment: Assignment): void {
-    return null;
+  removeGrade(student: Student, assignment: Assignment): Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref(this.className + "/Submissions").equalTo('AssignmentID', assignment.Key).equalTo('StudentID', student.Key).once('value', snapshot => {
+        snapshot.forEach(childSnap => {
+          firebase.database().ref(this.className + "/Submissions/" + childSnap.key).remove().catch(error => reject(error.message));
+          return false;
+        });
+        resolve("grade removed");
+      });
+    });
   }
+  
 
 
 
-
+  private assignmentToFbAssignment(assignment: Assignment): any {
+      return {
+        'DateAssigned': assignment.DateAssigned,
+        'Description' : assignment.Description,
+        'DueDate'     : assignment.DueDate,
+        'GithubLink'  : assignment.GithubLink,
+        'Key'         : assignment.Key,
+        'PointsPossible': assignment.PointsPossible,
+        'Title'       : assignment.Title
+      }
+  }
 
   private studentMap(jsonObj: any): Student {
     let student = {
       Name: jsonObj.Name,
-      Slack: jsonObj.SlackID,
+      SlackID: jsonObj.SlackID,
       Key: jsonObj.Key,
-      Image: jsonObj.ImageURL,
-      Github: jsonObj.GithubID,
+      ImageURL: jsonObj.ImageURL,
+      GithubID: jsonObj.GithubID,
       Email: jsonObj.Email,
       Assignments: null
     };
-    student.Assignments = [];
-    for (var key in jsonObj.AssignmentList) {
-      student.Assignments.push(this.assignmentDataMap(jsonObj.AssignmentList[key]));
-    }
+    // student.Assignments = [];
+    // for (var key in jsonObj.AssignmentList) {
+    //   student.Assignments.push(this.assignmentDataMap(jsonObj.AssignmentList[key]));
+    // }
 
     return student;
   }
 
-  private assignmentDataMap(jsonObj: any): AssignmentData {
-    return {
-      Key: jsonObj.Key,
-      DateSubmitted: jsonObj.DateSubmitted,
-      PointsScored: jsonObj.PointsScored
-    }
-  }
+  // private assignmentDataMap(jsonObj: any): AssignmentData {
+  //   return {
+  //     Key: jsonObj.Key,
+  //     DateSubmitted: jsonObj.DateSubmitted,
+  //     PointsScored: jsonObj.PointsScored
+  //   }
+  // }
 
 
 
@@ -208,9 +275,9 @@ export class Student {
   Key: string;
   Name: string;
   Email: string;
-  Github: URL;
-  Slack: URL;
-  Image: URL;
+  GithubID: string;
+  SlackID: string;
+  ImageURL: string;
 }
 
 export class Assignment {
@@ -223,10 +290,10 @@ export class Assignment {
   GithubLink: string;
 }
 
-export class AssignmentData {
-  Key: string;
-  PointsScored: number;
-  DateSubmitted: string;
-}
+// export class Submission {
+//   Key: string;
+//   PointsScored: number;
+//   DateSubmitted: string;
+// }
 
 

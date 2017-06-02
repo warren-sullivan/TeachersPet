@@ -49,15 +49,6 @@ export class DataServiceExamplePage {
     this.dataService.getClassList(this.user).then(data => console.log(data));
   }
 
-//   interface Assignment {
-//   Key: string,
-//   Title: string,
-//   PointsPossible: number,
-//   Description: string,
-//   DueDate: Date,
-//   DateAssigned: Date,
-//   GithubLink: URL
-// }
 
   addAssignment(){
     let assignment:Assignment = new Assignment();
@@ -70,6 +61,30 @@ export class DataServiceExamplePage {
       assignment.GithubLink = 'www.github.com/mybutt';
 
     this.dataService.addAssignment(assignment);
+  }
+
+  removeAssignment(){
+   // this.dataService.removeAssignment();
+  }
+
+  updateAssignment(){
+    // this.dataService.updateAssignment();
+  }
+
+  addStudent(){
+    // this.dataService.addStudent();
+  }
+
+  removeStudent(){
+    // this.dataService.removeStudent();
+  }
+
+  updateStudent(){
+   // this.dataService.updateStudent();
+  }
+
+  submitGrade() {
+   // this.dataService.submitGrade();
   }
 
 }
