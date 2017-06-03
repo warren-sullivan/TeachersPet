@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class DataService {
 
-  private className = "Mobile Development 2017";
+  private className = "";
 
   constructor() {
     firebase.initializeApp(keys.firebaseConfig);
@@ -53,7 +53,6 @@ export class DataService {
 
   /** add the name of a class.  Returns  nothing when done. */
   addClass(className: string, teacher:any):Promise<any>{
-   // console.log(teacher);
     return new Promise((resolve, reject) => {
      firebase.database().ref().child(className).set({'Instructor': teacher.uid}).then(data => {
         resolve("finished");
@@ -92,7 +91,7 @@ export class DataService {
 
 
   /** gets the list of assignemnts.  If a student is passed in, it gets the grades a and dates submitted as well.  Otherwise those values are null */
-  getAssignmentList(student?: Student): Promise<any> {
+  getAssignmentList(student?: Student): Promise<Assignment[]> {
     return new Promise((resolve, reject) => {
       firebase.database().ref(this.className + '/AssignmentList').once('value', (snapshot) => {
         let assignmentArray: Assignment[] = [];
@@ -183,7 +182,7 @@ export class DataService {
   }
 
   /** This is where we will put the points and date submitted for each grstudent and the grade they received. */
-  submitGrade(student: Student, assignment: Assignment, pointsScored: number, dateSubmittedInTicks: number): Promise<any>{
+  submitGrade(student: Student, assignment: Assignment, pointsScored: number, dateSubmittedInTicks: string): Promise<any>{
     return new Promise((resolve, reject) => {
       let fbObject = firebase.database().ref(this.className + "/Submissions").push();
 
@@ -200,11 +199,13 @@ export class DataService {
     });
   }
 
+  /** remove grade.  This will return when complete. */
   removeGrade(student: Student, assignment: Assignment): Promise<any> {
     return new Promise((resolve, reject) => {
-      firebase.database().ref(this.className + "/Submissions").equalTo('AssignmentID', assignment.Key).equalTo('StudentID', student.Key).once('value', snapshot => {
+      firebase.database().ref(this.className + "/Submissions").once('value', snapshot => {
         snapshot.forEach(childSnap => {
-          firebase.database().ref(this.className + "/Submissions/" + childSnap.key).remove().catch(error => reject(error.message));
+          if(childSnap.val().StudentID == student.Key && childSnap.val().AssignmentID == assignment.Key)
+            firebase.database().ref(this.className + "/Submissions/" + childSnap.key).remove().catch(error => reject(error.message));
           return false;
         });
         resolve("grade removed");
@@ -237,23 +238,9 @@ export class DataService {
       Email: jsonObj.Email,
       Assignments: null
     };
-    // student.Assignments = [];
-    // for (var key in jsonObj.AssignmentList) {
-    //   student.Assignments.push(this.assignmentDataMap(jsonObj.AssignmentList[key]));
-    // }
 
     return student;
   }
-
-  // private assignmentDataMap(jsonObj: any): AssignmentData {
-  //   return {
-  //     Key: jsonObj.Key,
-  //     DateSubmitted: jsonObj.DateSubmitted,
-  //     PointsScored: jsonObj.PointsScored
-  //   }
-  // }
-
-
 
   private assignmentMap(jsonObj: any): Assignment {
     return {
@@ -268,8 +255,6 @@ export class DataService {
   }
 
 }
-
-
 
 export class Student {
   Key: string;
@@ -289,11 +274,3 @@ export class Assignment {
   DateAssigned: string;
   GithubLink: string;
 }
-
-// export class Submission {
-//   Key: string;
-//   PointsScored: number;
-//   DateSubmitted: string;
-// }
-
-
