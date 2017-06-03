@@ -24,8 +24,11 @@ export class AssignmentsPage implements OnInit {
   }
 
   getAssignments() {
+    this.dataService.setClass("Mobile Development 2017").then(() => {
     this.dataService.getAssignmentList()
-    .then(res => this.assignments = res);
+    .then(res => {console.log(res); this.assignments = res});
+  
+  });
   }
 
   ngOnInit() {

@@ -88,8 +88,6 @@ export class DataService {
     });
   }
 
-
-
   /** gets the list of assignemnts.  If a student is passed in, it gets the grades a and dates submitted as well.  Otherwise those values are null */
   getAssignmentList(student?: Student): Promise<Assignment[]> {
     return new Promise((resolve, reject) => {
@@ -100,10 +98,6 @@ export class DataService {
       }).catch(e => reject("problems loading assignment list"));
     });
   }
-
-
-
-
 
   /** This will add to the assignment list.  Individual student grades will be ignored and not stored .  Use SubmitGrade for that functionality.  This function returns null on complete*/
   addAssignment(assignment: Assignment):Promise<any>{
@@ -213,9 +207,6 @@ export class DataService {
     });
   }
   
-
-
-
   private assignmentToFbAssignment(assignment: Assignment): any {
       return {
         'DateAssigned': assignment.DateAssigned,
@@ -253,7 +244,6 @@ export class DataService {
       GithubLink: jsonObj.GithubLink
     };
   }
-
 }
 
 export class Student {
