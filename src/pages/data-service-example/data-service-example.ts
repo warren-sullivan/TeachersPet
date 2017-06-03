@@ -57,6 +57,7 @@ export class DataServiceExamplePage {
       assignment.DueDate = '123456789';
       assignment.DateAssigned = '123456789';
       assignment.GithubLink = 'www.github.com/mybutt';
+  //  assignment.Key // DON'T MODIFY KEY
 
     this.dataService.addAssignment(assignment);
   }
@@ -81,6 +82,7 @@ export class DataServiceExamplePage {
       student.ImageURL = "http://www.myspace.com/hamburgilin.png";
       student.SlackID = "hamburgilin";
       student.Name = "Hamburgesa Torez";
+   // student.Key // DON'T MODIFY KEY
     
     this.dataService.addStudent(student).then(() => this.refreshStudentList());
   }
