@@ -20,14 +20,27 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-    this.dataService.getUser().subscribe(user => console.log(user)
+    this.dataService.getUser().subscribe(user => {
+      console.log(user);
+      if (user !== null)
+        {
+          this.navToStudentsList();
+        }
+
+      }
     );
   }
   navToStudentsList(){
     this.navCtrl.push(ClassListPage);
   }
 
+  navToLoginPage(){
+    this.navCtrl.push(LoginPage);
+  }
   signIn(){
-    this.dataService.signIn();
+
+    //let nav = this.navCtrl;
+    this.dataService.signIn()
+
   }
 }

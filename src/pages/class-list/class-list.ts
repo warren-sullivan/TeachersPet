@@ -4,6 +4,8 @@ import { NavController } from 'ionic-angular';
 import { ClassCreationPage } from '../class-creation/class-creation';
 import { ClassService } from '../../providers/class-service';
 import {StudentsList} from "../students-list/students-list";
+import { DataService } from '../../providers/data-service';
+import { LoginPage} from "../login-page/login-page";
 
 @Component({
     selector: 'page-class',
@@ -11,44 +13,68 @@ import {StudentsList} from "../students-list/students-list";
 })
 export class ClassListPage implements OnInit {
 
-    classes: any;
-    deleteToggle = false;
+  classes: any;
+  deleteToggle = false;
 
-    constructor(public navCtrl: NavController, public classService: ClassService) {
+  constructor(public navCtrl: NavController, public classService: ClassService, public dataService: DataService) {
 
+  }
+
+  createClass() {
+    this.navCtrl.push(ClassCreationPage);
+  }
+
+  importClasses() {
+    this.classes = this.classService.classes;
+  }
+
+  toggleDeleteButton() {
+    if (!this.deleteToggle) {
+      this.deleteToggle = true;
     }
+    else this.deleteToggle = false;
+  }
 
-    createClass() {
-        this.navCtrl.push(ClassCreationPage);
-    }
-
-    importClasses() {
-        this.classes = this.classService.classes;
-    }
-
-    toggleDeleteButton(){
-      if(!this.deleteToggle){
-        this.deleteToggle = true;
+  confirmDelete() {
+    for (let i = 0; i < this.classes.length; i++) {
+      if (this.classes[i].selected) {
+        console.log(this.classes[i].name);
       }
-      else this.deleteToggle = false;
     }
+  }
 
-    confirmDelete(){
-      for(let i = 0; i < this.classes.length; i++){
-        if(this.classes[i].selected){
-          console.log(this.classes[i].name);
+  classSelected() {
+    this.navCtrl.push(StudentsList);
+  }
+
+  ngOnInit() {
+    this.importClasses();
+  }
+
+  signOut() {
+    this.dataService.signOut();
+
+  }
+
+  ionViewDidLoad() {
+    this.dataService.getUser().subscribe(user => {
+        console.log(user);
+        if (user == null) {
+
+          this.navToLoginPage();
         }
       }
-    }
+    );
+  }
 
-    classSelected()
-    {
-      this.navCtrl.push(StudentsList);
-    }
+  navToStudentsList() {
+    this.navCtrl.push(ClassListPage);
+  }
 
-    ngOnInit(){
-        this.importClasses();
-    }
-
-
+  navToLoginPage() {
+    this.navCtrl.push(LoginPage);
+  }
 }
+
+
+
