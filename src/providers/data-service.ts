@@ -14,7 +14,7 @@ export class DataService {
   }
 
   /** returns a user object if already signed in.  Returns null if not signed in. */
-  getUserAuthStatus(): Observable<any>{
+  getUserAuthStatus(): Observable<any> {
     return Observable.create(observer => {
       firebase.auth().onAuthStateChanged(user => {
         observer.next(user);
@@ -23,14 +23,14 @@ export class DataService {
   }
 
   /** Set to sign a user in using google .  Doesn't give feedback on if it worked.  That is the job of geUserAuthStatus to do */
-  signIn(){
-      let provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithRedirect(provider);
+  signIn() {
+    let provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
   }
 
   /** Signs the user out from google authentication.  Feeback isn't displayed here, but rather in the getUserAuthStatus observable. */
-  signOut(){
-      firebase.auth().signOut();
+  signOut() {
+    firebase.auth().signOut();
   }
 
   /** returns the name of the class */
@@ -39,22 +39,22 @@ export class DataService {
   }
 
   /** sets the class name to query on, verifies if exists.  Throws error if it does not */
-  setClass(className: string) : Promise<any> {
+  setClass(className: string): Promise<any> {
     return new Promise((resolve, reject) => {
       firebase.database().ref().child(className).once('value', snapshot => {
-        if(snapshot.val()){
+        if (snapshot.val()) {
           this.className = className;
           resolve("this classname is legit");
-        }else
+        } else
           reject("this class name is bogus.");
       });
     });
   }
 
   /** add the name of a class.  Returns  nothing when done. */
-  addClass(className: string, teacher:any):Promise<any>{
+  addClass(className: string, teacher: any): Promise<any> {
     return new Promise((resolve, reject) => {
-     firebase.database().ref().child(className).set({'Instructor': teacher.uid}).then(data => {
+      firebase.database().ref().child(className).set({ 'Instructor': teacher.uid }).then(data => {
         resolve("finished");
       }).catch(error => {
         reject(error.message);
@@ -68,14 +68,14 @@ export class DataService {
       firebase.database().ref().once('value', snapshot => {
         let nameList: string[] = [];
         snapshot.forEach(childSnapshot => {
-          if(!teacher || childSnapshot.val().Instructor == teacher.uid)
-          nameList.push(childSnapshot.key);
+          if (!teacher || childSnapshot.val().Instructor == teacher.uid)
+            nameList.push(childSnapshot.key);
           return false;
         });
         resolve(nameList);
       }).catch(error => resolve(error.message));
     })
-   }
+  }
 
   /** returns the list of students */
   getStudentList(): Promise<Student[]> {
@@ -100,7 +100,7 @@ export class DataService {
   }
 
   /** This will add to the assignment list.  Individual student grades will be ignored and not stored .  Use SubmitGrade for that functionality.  This function returns null on complete*/
-  addAssignment(assignment: Assignment):Promise<any>{
+  addAssignment(assignment: Assignment): Promise<any> {
     return new Promise((resolve, reject) => {
       let fbObject = firebase.database().ref(this.className + "/AssignmentList").push();
 
@@ -114,7 +114,7 @@ export class DataService {
   }
 
   /** this will remove an assignemtn  from the assignment list.  This doesn't  remove an individual students grade. */
-  removeAssignment(assignment: Assignment):Promise<any>{
+  removeAssignment(assignment: Assignment): Promise<any> {
     return new Promise((resolve, reject) => {
       let key: string = assignment.Key;
 
@@ -141,13 +141,13 @@ export class DataService {
   }
 
   /** this will be used to  add a student.  Make the student object and send it on its way. */
-  addStudent(student: Student): Promise<any>{
+  addStudent(student: Student): Promise<any> {
     return new Promise((resolve, reject) => {
       let fbObject = firebase.database().ref(this.className + "/StudentList").push();
       student.Key = fbObject.key;
       fbObject.set(student)
-      .then(snapshot => resolve("added"))
-      .catch(error => reject(error.message));
+        .then(snapshot => resolve("added"))
+        .catch(error => reject(error.message));
     });
   }
 
@@ -167,29 +167,29 @@ export class DataService {
   }
 
   /** make changes to a student.  This will find the object based on a key and make the changes based on the object passed in. */
-  updateStudent(student: Student): Promise<any>{
+  updateStudent(student: Student): Promise<any> {
     return new Promise((resolve, reject) => {
       firebase.database().ref(this.className + "/StudentList/" + student.Key).update(student)
-      .then(data => resolve("update complete"))
-      .catch(error => reject(error.message));
+        .then(data => resolve("update complete"))
+        .catch(error => reject(error.message));
     });
   }
 
   /** This is where we will put the points and date submitted for each grstudent and the grade they received. */
-  submitGrade(student: Student, assignment: Assignment, pointsScored: number, dateSubmittedInTicks: string): Promise<any>{
+  submitGrade(student: Student, assignment: Assignment, pointsScored: number, dateSubmittedInTicks: string): Promise<any> {
     return new Promise((resolve, reject) => {
       let fbObject = firebase.database().ref(this.className + "/Submissions").push();
 
       let grade = {
         'StudentID': student.Key,
-        'AssignmentID' : assignment.Key,
-        'Points' : pointsScored,
-        'DateSubmitted' : dateSubmittedInTicks
+        'AssignmentID': assignment.Key,
+        'Points': pointsScored,
+        'DateSubmitted': dateSubmittedInTicks
       }
 
       fbObject.set(grade)
-      .then(data => resolve("grade submitted"))
-      .catch(error => reject(error.message));
+        .then(data => resolve("grade submitted"))
+        .catch(error => reject(error.message));
     });
   }
 
@@ -198,7 +198,7 @@ export class DataService {
     return new Promise((resolve, reject) => {
       firebase.database().ref(this.className + "/Submissions").once('value', snapshot => {
         snapshot.forEach(childSnap => {
-          if(childSnap.val().StudentID == student.Key && childSnap.val().AssignmentID == assignment.Key)
+          if (childSnap.val().StudentID == student.Key && childSnap.val().AssignmentID == assignment.Key)
             firebase.database().ref(this.className + "/Submissions/" + childSnap.key).remove().catch(error => reject(error.message));
           return false;
         });
@@ -206,17 +206,17 @@ export class DataService {
       });
     });
   }
-  
+
   private assignmentToFbAssignment(assignment: Assignment): any {
-      return {
-        'DateAssigned': assignment.DateAssigned,
-        'Description' : assignment.Description,
-        'DueDate'     : assignment.DueDate,
-        'GithubLink'  : assignment.GithubLink,
-        'Key'         : assignment.Key,
-        'PointsPossible': assignment.PointsPossible,
-        'Title'       : assignment.Title
-      }
+    return {
+      'DateAssigned': assignment.DateAssigned,
+      'Description': assignment.Description,
+      'DueDate': assignment.DueDate,
+      'GithubLink': assignment.GithubLink,
+      'Key': assignment.Key,
+      'PointsPossible': assignment.PointsPossible,
+      'Title': assignment.Title
+    }
   }
 
   private studentMap(jsonObj: any): Student {
