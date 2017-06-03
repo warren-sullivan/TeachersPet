@@ -10,23 +10,23 @@ import { DataService, Assignment, Student } from '../../providers/data-service';
 })
 export class DataServiceExamplePage {
 
-  signedIn: boolean = false;
   user: any = null;
 
+  assignmentList: Assignment[] = [];
+  studentList: Student[] = [];
+
   constructor(public dataService: DataService, public navCtrl: NavController, public navParams: NavParams) {
+    
   }
 
   ionViewDidLoad() {
     this.dataService.getUserAuthStatus().subscribe(user => {
-      console.log(user)
       this.user = user;
+      this.dataService.setClass("Mobile Development 2017").then(() => {
+        this.refreshAssignmentList();
+        this.refreshStudentList();
+      });
     });
-  }
-
-  getStudentList(){
-    this.dataService.getStudentList()
-    .then(students => console.log(students));
-
   }
 
   signIn(){
@@ -45,19 +45,8 @@ export class DataServiceExamplePage {
 
   }
 
-  getClassList() {
-    this.dataService.getClassList(this.user).then(data => console.log(data));
-  }
 
-//   interface Assignment {
-//   Key: string,
-//   Title: string,
-//   PointsPossible: number,
-//   Description: string,
-//   DueDate: Date,
-//   DateAssigned: Date,
-//   GithubLink: URL
-// }
+
 
   addAssignment(){
     let assignment:Assignment = new Assignment();
@@ -70,6 +59,67 @@ export class DataServiceExamplePage {
       assignment.GithubLink = 'www.github.com/mybutt';
 
     this.dataService.addAssignment(assignment);
+  }
+
+  removeAssignment(){
+    if(this.assignmentList.length > 0)
+      this.dataService.removeAssignment(this.assignmentList[0]).then(() => this.refreshAssignmentList());
+  }
+
+  updateAssignment(){
+    if(this.assignmentList.length > 0){
+      let assignment = this.assignmentList[0];
+      assignment.Title = "Purple Awesome Sauce";
+      this.dataService.updateAssignment(assignment).then(() => this.refreshAssignmentList());
+    }
+  }
+
+  addStudent(){
+    let student:Student = new Student();
+      student.Email = "hamburgilin@aol.com";
+      student.GithubID = "hamburgilin";
+      student.ImageURL = "http://www.myspace.com/hamburgilin.png";
+      student.SlackID = "hamburgilin";
+      student.Name = "Hamburgesa Torez";
+    
+    this.dataService.addStudent(student).then(() => this.refreshStudentList());
+  }
+
+  removeStudent(){
+    if(this.studentList.length > 0)
+      this.dataService.removeStudent(this.studentList[0]).then(() => this.refreshStudentList());
+  }
+
+  updateStudent(){
+    if(this.studentList.length > 0){
+      let student = this.studentList[0];
+      student.Name = "Joe Somebody";
+      this.dataService.updateStudent(student).then(() => this.refreshStudentList());
+    }
+  }
+
+  submitGrade() {
+    if(this.studentList.length > 0 && this.assignmentList.length > 0){
+      let student = this.studentList[0];
+      let assignment = this.assignmentList[0];
+      this.dataService.submitGrade(student, assignment, 17, new Date().toString()).then(() => console.log("submitted grade"));
+    }
+  }
+
+  removeGrade() {
+    if(this.studentList.length > 0 && this.assignmentList.length > 0){
+      let student = this.studentList[0];
+      let assignment = this.assignmentList[0];
+      this.dataService.removeGrade(student, assignment).then(() => console.log("done removing grade"));
+    }
+  }
+
+  refreshStudentList() {
+    this.dataService.getStudentList().then(studentList => this.studentList = studentList);
+  }
+
+  refreshAssignmentList() {
+    this.dataService.getAssignmentList().then(assignmentList => this.assignmentList = assignmentList);
   }
 
 }
