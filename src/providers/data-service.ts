@@ -146,7 +146,6 @@ export class DataService {
 
       let dataToStore = this.assignmentToFbAssignment(assignment);
       dataToStore.Key = fbObject.key;
-
       fbObject.set(dataToStore).then(data => {
         resolve(data);
       }).catch(error => reject(error.message));
@@ -195,7 +194,7 @@ export class DataService {
   removeStudent(student: Student): Promise<any> {
     return new Promise((resolve, reject) => {
       firebase.database().ref(this.className + "/StudentList/" + student.Key).remove().catch(error => reject(error.message));
-      firebase.database().ref(this.className + "/Submissions").equalTo('StudentID', student.Key).once('value', snapshot => {
+      firebase.database().ref(this.className + "/Submissions").orderByChild('StudentID').equalTo(student.Key).once('value', snapshot => {
         snapshot.forEach(childSnap => {
           let subKey = childSnap.key;
           firebase.database().ref(this.className + "/Submissions/" + subKey).remove().catch(error => reject(error.message));
