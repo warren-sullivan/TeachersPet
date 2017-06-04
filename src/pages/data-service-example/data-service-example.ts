@@ -22,9 +22,14 @@ export class DataServiceExamplePage {
   ionViewDidLoad() {
     this.dataService.getUserAuthStatus().subscribe(user => {
       this.user = user;
-      this.dataService.setClass("Mobile Development 2017").then(() => {
-        this.refreshAssignmentList();
-        this.refreshStudentList();
+      this.dataService.setClass("Test Class").then(() => {
+        let student = new Student();
+        student.Key = 'Key1';
+        this.dataService.getAssignmentList(student).then(list => {
+          console.log(list[0].PointsScored);
+        })
+        //this.refreshAssignmentList();
+        //this.refreshStudentList();
       });
     });
   }

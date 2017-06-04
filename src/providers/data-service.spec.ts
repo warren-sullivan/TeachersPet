@@ -96,4 +96,39 @@ describe('Data Service Testing', () => {
             done();
         })
     });
+
+    it('get assignment list', (done) => {
+        let alRef = firebase.database().ref("Test Class/AssignmentList");
+        let assignment = Object.assign({}, testAssignment);
+
+        assignment.Key = 'Key1';
+        alRef.child('Key1').set(assignment);
+
+        assignment.Key = 'Key2';
+        alRef.child('Key2').set(assignment);
+
+        dataService.getAssignmentList().then(assignmentList => {
+            expect(assignmentList.length).toBe(2);
+            done();
+        })
+    });
+
+    it('get student values if student values exist', done => {
+        firebase.database().ref("Test Class/Submissions/Test1").set({
+            StudentID: 'Key1',
+            AssignmentID: 'Key1',
+            Points: 100,
+            DateSubmitted: 'Some Date'
+        });
+        let student = Object.assign({}, testStudent);
+        student.Key = 'Key1';
+        dataService.getAssignmentList(student).then(assignmentList => {
+           if( assignmentList.length > 0){
+               console.log(assignmentList[0].PointsScored);
+               expect(assignmentList[0].PointsScored == 100 
+               && assignmentList[0].DateSubmitted == "Some Date").toBeTruthy();
+               done();
+           }
+        })
+    });
 });
