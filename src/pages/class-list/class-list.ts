@@ -2,21 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { ClassCreationPage } from '../class-creation/class-creation';
-import { ClassService } from '../../providers/class-service';
-import {StudentsList} from "../students-list/students-list";
 import { DataService } from '../../providers/data-service';
-import { LoginPage} from "../login-page/login-page";
+import { StudentsList } from "../students-list/students-list";
 
 @Component({
-    selector: 'page-class',
-    templateUrl: 'class-list.html'
+  selector: 'page-class',
+  templateUrl: 'class-list.html'
 })
 export class ClassListPage implements OnInit {
+
+  user: any = 'Aaron Robinson';
 
   classes: any;
   deleteToggle = false;
 
-  constructor(public navCtrl: NavController, public classService: ClassService, public dataService: DataService) {
+  constructor(public navCtrl: NavController, public dataService: DataService) {
 
   }
 
@@ -25,7 +25,9 @@ export class ClassListPage implements OnInit {
   }
 
   importClasses() {
-    this.classes = this.classService.classes;
+    this.dataService.getClassList().then(res => {
+      this.classes = res;
+    })
   }
 
   toggleDeleteButton() {
@@ -50,31 +52,8 @@ export class ClassListPage implements OnInit {
   ngOnInit() {
     this.importClasses();
   }
-
-  signOut() {
-    this.dataService.signOut();
-
-  }
-
-  ionViewDidLoad() {
-    this.dataService.getUserAuthStatus().subscribe(user => {
-        console.log(user);
-        if (user == null) {
-
-          this.navToLoginPage();
-        }
-      }
-    );
-  }
-
-  navToStudentsList() {
-    this.navCtrl.push(ClassListPage);
-  }
-
-  navToLoginPage() {
-    this.navCtrl.push(LoginPage);
+  
+  ionViewWillEnter(){
+    this.importClasses();
   }
 }
-
-
-
