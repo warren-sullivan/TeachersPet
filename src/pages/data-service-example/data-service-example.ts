@@ -26,7 +26,7 @@ export class DataServiceExamplePage {
         let student = new Student();
         student.Key = 'Key1';
         this.dataService.getAssignmentList(student).then(list => {
-          console.log(list[0].PointsScored);
+          //console.log(list[0].PointsScored);
         })
         //this.refreshAssignmentList();
         //this.refreshStudentList();
