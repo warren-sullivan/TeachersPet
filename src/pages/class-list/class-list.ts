@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { ClassCreationPage } from '../class-creation/class-creation';
-import { ClassService } from '../../providers/class-service';
+import { DataService } from '../../providers/data-service';
 import {StudentsList} from "../students-list/students-list";
 
 @Component({
@@ -11,10 +11,12 @@ import {StudentsList} from "../students-list/students-list";
 })
 export class ClassListPage implements OnInit {
 
+    user: any = 'Aaron Robinson';
+
     classes: any;
     deleteToggle = false;
 
-    constructor(public navCtrl: NavController, public classService: ClassService) {
+    constructor(public navCtrl: NavController, public dataService: DataService) {
 
     }
 
@@ -23,7 +25,10 @@ export class ClassListPage implements OnInit {
     }
 
     importClasses() {
-        this.classes = this.classService.classes;
+        this.dataService.getClassList(this.user).then(res => {
+          this.classes = res;
+          console.log(res);
+        })
     }
 
     toggleDeleteButton(){
