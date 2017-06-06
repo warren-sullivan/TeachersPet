@@ -56,6 +56,4 @@ export class ClassListPage implements OnInit {
   ionViewWillEnter(){
     this.importClasses();
   }
-
-
 }

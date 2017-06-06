@@ -1,10 +1,14 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton="true">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title style="float:left;">Class</ion-title>
+
+    <ion-icon name = "log-out" right large (click)="signOut()"></ion-icon>
+
     <ion-icon color="primary" name="md-trash" style='font-size:28px; float: right; padding-right: 15px; ' right (click)="toggleDeleteButton()"></ion-icon>
+
     <form (ngSubmit)="confirmDelete()">
       <button type="submit" ion-button color="danger" *ngIf="deleteToggle" style="float: right;" small>Delete</button>
     </form>
@@ -19,7 +23,7 @@
             {{class}}
         </button>
   </ion-list>
-  
+
   <ion-fab right bottom>
     <button ion-fab mini (click)="createClass()"><ion-icon name="add"></ion-icon></button>
   </ion-fab>

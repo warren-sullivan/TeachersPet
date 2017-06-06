@@ -22,6 +22,9 @@ import { AssignmentsPage } from "../pages/assignments/assignments";
 import { DataService } from '../providers/data-service';
 import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example';
 
+import {StudentCreation} from "../pages/student-creation/student-creation"; // used for example usage and testing
+
+
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     LoginPage,
     StudentsList,
     StudentDetail,
+
+    StudentCreation,
+
     ClassListPage,
     ClassCreationPage,
 
@@ -51,6 +57,10 @@ import { DataServiceExamplePage } from '../pages/data-service-example/data-servi
     LoginPage,
     StudentsList,
     StudentDetail,
+
+    StudentCreation,
+
+
     ClassListPage,
     ClassCreationPage,
     DataServiceExamplePage,
