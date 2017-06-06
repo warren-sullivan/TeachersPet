@@ -22,9 +22,14 @@ export class DataServiceExamplePage {
   ionViewDidLoad() {
     this.dataService.getUserAuthStatus().subscribe(user => {
       this.user = user;
-      this.dataService.setClass("Mobile Development 2017").then(() => {
-        this.refreshAssignmentList();
-        this.refreshStudentList();
+      this.dataService.setClass("Test Class").then(() => {
+        let student = new Student();
+        student.Key = 'Key1';
+        this.dataService.getAssignmentList(student).then(list => {
+          //console.log(list[0].PointsScored);
+        })
+        //this.refreshAssignmentList();
+        //this.refreshStudentList();
       });
     });
   }
@@ -57,6 +62,7 @@ export class DataServiceExamplePage {
       assignment.DueDate = '123456789';
       assignment.DateAssigned = '123456789';
       assignment.GithubLink = 'www.github.com/mybutt';
+  //  assignment.Key // DON'T MODIFY KEY
 
     this.dataService.addAssignment(assignment);
   }
@@ -81,6 +87,7 @@ export class DataServiceExamplePage {
       student.ImageURL = "http://www.myspace.com/hamburgilin.png";
       student.SlackID = "hamburgilin";
       student.Name = "Hamburgesa Torez";
+   // student.Key // DON'T MODIFY KEY
     
     this.dataService.addStudent(student).then(() => this.refreshStudentList());
   }

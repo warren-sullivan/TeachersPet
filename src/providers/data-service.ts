@@ -88,22 +88,56 @@ export class DataService {
     });
   }
 
-
-
-  /** gets the list of assignemnts.  If a student is passed in, it gets the grades a and dates submitted as well.  Otherwise those values are null */
+  /** gets the list of assignemnts.  If a student is passed in, it gets the grades and dates submitted as well.  Otherwise those values are null */
   getAssignmentList(student?: Student): Promise<Assignment[]> {
-    return new Promise((resolve, reject) => {
-      firebase.database().ref(this.className + '/AssignmentList').once('value', (snapshot) => {
+    function getMatchingSubmissions(assignment: Assignment, submissionList: any[]){
+      let thingToReturn = null;
+      submissionList.forEach(submission => {       
+        if(submission.AssignmentID == assignment.Key){
+          thingToReturn = submission;;
+        }
+      });
+      return thingToReturn;
+    }
+
+    function getList(className: string, assignmentMap: any, resolve: any, reject: any, studentSubmissions?: any[]){
+
+        firebase.database().ref(className + '/AssignmentList').once('value', (snapshot) => {
         let assignmentArray: Assignment[] = [];
-        snapshot.forEach(childSnapshot => { assignmentArray.push(this.assignmentMap(childSnapshot.val())); return false; });
+        snapshot.forEach(childSnapshot => { 
+          let assignment = assignmentMap(childSnapshot.val());
+          let submission = null;
+         
+          if(studentSubmissions){
+            submission = getMatchingSubmissions(assignment, studentSubmissions);
+          }
+          if(submission){
+            assignment.PointsScored = submission.Points;
+            assignment.DateSubmitted = submission.DateSubmitted;
+          }
+          assignmentArray.push(assignment); 
+          return false; 
+        });
+
         resolve(assignmentArray);
       }).catch(e => reject("problems loading assignment list"));
+    }
+
+    return new Promise((resolve, reject) => {
+      if(student){
+        let submissionList: any[] = [];
+        firebase.database().ref(this.className).child('Submissions').orderByChild('StudentID').equalTo(student.Key).once('value', snapshot => {     
+          snapshot.forEach(childSnap => {
+            submissionList.push(childSnap.val());
+            return false;  
+          });     
+          getList(this.className, this.assignmentMap, resolve, reject, submissionList);
+        });
+      }else{
+        getList(this.className, this.assignmentMap, resolve, reject);
+      }
     });
   }
-
-
-
-
 
   /** This will add to the assignment list.  Individual student grades will be ignored and not stored .  Use SubmitGrade for that functionality.  This function returns null on complete*/
   addAssignment(assignment: Assignment): Promise<any> {
@@ -112,7 +146,6 @@ export class DataService {
 
       let dataToStore = this.assignmentToFbAssignment(assignment);
       dataToStore.Key = fbObject.key;
-
       fbObject.set(dataToStore).then(data => {
         resolve(data);
       }).catch(error => reject(error.message));
@@ -161,7 +194,7 @@ export class DataService {
   removeStudent(student: Student): Promise<any> {
     return new Promise((resolve, reject) => {
       firebase.database().ref(this.className + "/StudentList/" + student.Key).remove().catch(error => reject(error.message));
-      firebase.database().ref(this.className + "/Submissions").equalTo('StudentID', student.Key).once('value', snapshot => {
+      firebase.database().ref(this.className + "/Submissions").orderByChild('StudentID').equalTo(student.Key).once('value', snapshot => {
         snapshot.forEach(childSnap => {
           let subKey = childSnap.key;
           firebase.database().ref(this.className + "/Submissions/" + subKey).remove().catch(error => reject(error.message));
@@ -182,7 +215,7 @@ export class DataService {
   }
 
   /** This is where we will put the points and date submitted for each grstudent and the grade they received. */
-  submitGrade(student: Student, assignment: Assignment, pointsScored: number, dateSubmittedInTicks: string): Promise<any> {
+  submitGrade(student: Student, assignment: Assignment, pointsScored: number, dateSubmitted: string): Promise<any> {
     return new Promise((resolve, reject) => {
       let fbObject = firebase.database().ref(this.className + "/Submissions").push();
 
@@ -190,7 +223,7 @@ export class DataService {
         'StudentID': student.Key,
         'AssignmentID': assignment.Key,
         'Points': pointsScored,
-        'DateSubmitted': dateSubmittedInTicks
+        'DateSubmitted': dateSubmitted
       }
 
       fbObject.set(grade)
@@ -212,9 +245,6 @@ export class DataService {
       });
     });
   }
-
-
-
 
   private assignmentToFbAssignment(assignment: Assignment): any {
     return {
@@ -250,10 +280,12 @@ export class DataService {
       Description: jsonObj.Description,
       DueDate: jsonObj.DueDate,
       DateAssigned: jsonObj.DateAssigned,
-      GithubLink: jsonObj.GithubLink
+      GithubLink: jsonObj.GithubLink,
+
+      PointsScored: 0,
+      DateSubmitted: ""
     };
   }
-
 }
 
 export class Student {
@@ -273,4 +305,7 @@ export class Assignment {
   DueDate: string;
   DateAssigned: string;
   GithubLink: string;
+
+  PointsScored: number;
+  DateSubmitted: string;
 }
