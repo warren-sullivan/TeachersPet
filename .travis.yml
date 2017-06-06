@@ -6,7 +6,7 @@ node_js:
   - node
 
 install:
-  - npm install -g cordova ionic
+  - npm install -g cordova ionic@latest
   - npm install
 
 script: ionic cordova build browser
