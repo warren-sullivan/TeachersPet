@@ -52,6 +52,7 @@ export class ClassListPage implements OnInit {
   ngOnInit() {
     this.importClasses();
   }
+  
   ionViewWillEnter(){
     this.importClasses();
   }
