@@ -4,8 +4,12 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title style="float:left;">Class</ion-title>
+<<<<<<< HEAD
     <ion-icon color="primary" style="font-size:28px; float: right; padding-right: 15px;" name="md-trash" right (click)="toggleDeleteButton()"></ion-icon>
     <ion-icon name = "log-out" right large (click)="signOut()"></ion-icon>
+=======
+    <ion-icon color="primary" name="md-trash" style='font-size:28px; float: right; padding-right: 15px; ' right (click)="toggleDeleteButton()"></ion-icon>
+>>>>>>> upstream/master
     <form (ngSubmit)="confirmDelete()">
       <button type="submit" ion-button color="danger" *ngIf="deleteToggle" style="float: right;" small>Delete</button>
     </form>

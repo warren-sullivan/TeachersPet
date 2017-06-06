@@ -10,7 +10,6 @@ import { ClassListPage } from '../pages/class-list/class-list';
 import { ClassCreationPage } from '../pages/class-creation/class-creation';
 
 import { ClassService } from '../providers/class-service';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -22,7 +21,9 @@ import { AssignmentsPage } from "../pages/assignments/assignments";
 
 import { DataService } from '../providers/data-service';
 import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example';
+
 import {StudentCreation} from "../pages/student-creation/student-creation"; // used for example usage and testing
+
 
 
 @NgModule({
@@ -38,8 +39,10 @@ import {StudentCreation} from "../pages/student-creation/student-creation"; // u
 
     ClassListPage,
     ClassCreationPage,
+
     DataServiceExamplePage,
     AssignmentsPage
+
   ],
   imports: [
     BrowserModule,
