@@ -1,0 +1,29 @@
+<!--
+  Generated template for the StudentCreation page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>studentCreation</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <form (ngSubmit)="addStudent()">
+
+    <ion-list>
+      <ion-item>
+        <ion-label floating>Student Name</ion-label>
+        <ion-input type="text" [(ngModel)]="studentName" name="studentName"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button type="submit">Submit</button>
+  </form>
+
+</ion-content>
