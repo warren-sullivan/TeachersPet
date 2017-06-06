@@ -20,7 +20,7 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-    this.dataService.getUser().subscribe(user => {
+    this.dataService.getUserAuthStatus().subscribe(user => {
       console.log(user);
       if (user !== null)
         {

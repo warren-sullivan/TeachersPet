@@ -57,7 +57,7 @@ export class ClassListPage implements OnInit {
   }
 
   ionViewDidLoad() {
-    this.dataService.getUser().subscribe(user => {
+    this.dataService.getUserAuthStatus().subscribe(user => {
         console.log(user);
         if (user == null) {
 
