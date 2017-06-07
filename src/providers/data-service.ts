@@ -257,6 +257,27 @@ export class DataService {
     });
   }
 
+
+
+  /** uploads a blob image, returns a status during and a url when complete { progress: number, URL: string, status: string } */
+  uploadImage(imageURI: any): Observable<any>{
+    let returnData = { progress: 0, URL: ''};
+
+    return Observable.create(observer => {
+      let uploadTask = firebase.storage().ref().child(imageURI.name).put(imageURI);
+
+      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
+          returnData.progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          observer.next(returnData);
+        }, error => console.log(error)
+        , () => {
+          returnData.URL = uploadTask.snapshot.downloadURL
+          observer.next(returnData);
+          observer.complete();
+        });
+    });
+  }
+
   private assignmentToFbAssignment(assignment: Assignment): any {
     return {
       'DateAssigned': assignment.DateAssigned,
