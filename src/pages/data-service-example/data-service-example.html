@@ -1,9 +1,4 @@
-<!--
-  Generated template for the DataServiceExamplePage page.
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
   <ion-navbar>
@@ -14,9 +9,27 @@
 
 
 <ion-content padding>
+  <ion-list>
+    <button ion-item *ngFor="let student of studentList">{{student.Name}}</button>
+  </ion-list>
+  <ion-list>
+    <button ion-item *ngFor="let assignment of assignmentList">{{assignment.Title}}</button>
+  </ion-list>
+
   <button (click)="signIn()" ion-button>Sign In</button>
   <button (click)="signOut()" ion-button>Sign Out</button>
-  <button (click)="getStudentList()" ion-button>Get Student List</button>
+  <button (click)="addClass()" ion-button>Add Class</button>
+  <button (click)="addAssignment()" ion-button>Add Assignment</button>
+  <button (click)="removeAssignment()" ion-button>Remove Assignment</button>
+  <button (click)="updateAssignment()" ion-button>Update Assignment</button>
+  <button (click)="addStudent()" ion-button>Add Student</button>
+  <button (click)="removeStudent()" ion-button>Remove Student</button>
+  <button (click)="updateStudent()" ion-button>Update Student</button>
+  <button (click)="submitGrade()" ion-button>Submit Grade</button>
+  <button (click)="removeGrade()" ion-button>Remove Grade</button>
+  
+  <button (click)="camera()" ion-button>Camera</button>
+  <img src={{catUrl}}>
 
 <p *ngIf="signedIn">Logged In</p>
 
