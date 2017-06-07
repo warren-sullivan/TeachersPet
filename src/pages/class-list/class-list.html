@@ -5,9 +5,7 @@
     </button>
     <ion-title style="float:left;">Class</ion-title>
 
-    <ion-icon name = "log-out" right large (click)="signOut()"></ion-icon>
-
-    <ion-icon color="primary" name="md-trash" style='font-size:28px; float: right; padding-right: 15px; ' right (click)="toggleDeleteButton()"></ion-icon>
+    <ion-icon color="primary" name="md-trash" style='font-size:28px; float: right; padding-right: 15px; padding-left: 15px; ' right (click)="toggleDeleteButton()"></ion-icon>
 
     <form (ngSubmit)="confirmDelete()">
       <button type="submit" ion-button color="danger" *ngIf="deleteToggle" style="float: right;" small>Delete</button>
@@ -17,11 +15,11 @@
 
 <ion-content>
 
-  <ion-list inset>
-    <button ion-item *ngFor="let class of classes" (click)="classSelected()">
-          <ion-checkbox *ngIf="deleteToggle"[(ngModel)]="class.selected"></ion-checkbox>
-            {{class}}
-        </button>
+  <ion-list radio-group [(ngModel)]='classSelected'>
+    <ion-item *ngFor="let class of classes" (click)="classClicked()">
+      <ion-label>{{class}}</ion-label>
+      <ion-radio value='{{class}}'  *ngIf="deleteToggle"></ion-radio>
+    </ion-item>
   </ion-list>
 
   <ion-fab right bottom>
