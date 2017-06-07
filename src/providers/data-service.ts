@@ -257,6 +257,32 @@ export class DataService {
     });
   }
 
+    // return Observable.create(observer => {
+    //   firebase.auth().onAuthStateChanged(user => {
+    //     observer.next(user);
+    //   })
+    // })
+
+  /** uploads a blob image, returns a status during and a url when complete { progress: number, URL: string } */
+  uploadImage(imageURI: any): Observable<any>{
+    return Observable.create(observer => {
+      let returnPacket = {
+        progress: 0,
+        URL: ''
+      };
+      fetch(imageURI).then(data => {
+        let blob = data.blob();
+        //firebase.storage().ref().child().p
+      })
+    });
+    // return new Promise((resolve, reject) => {
+    //   fetch(imageURI).then(blob => {
+    //     console.log(blob);
+
+    //   });
+    // });
+  }
+
   private assignmentToFbAssignment(assignment: Assignment): any {
     return {
       'DateAssigned': assignment.DateAssigned,
