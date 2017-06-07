@@ -132,11 +132,7 @@ export class DataServiceExamplePage {
   }
 
   onChange(event: any){
-    
-    // console.log(event.srcElement.files);
-    // let r = new FileReader();
-    // r.onload = function(){console.log(r.result)};
-    // r.readAsBinaryString(event.srcElement.files[0] as Blob);
+
     this.dataService.uploadImage(event.srcElement.files[0]).subscribe(data => {
       console.log(data);
     });
