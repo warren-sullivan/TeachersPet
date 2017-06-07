@@ -257,4 +257,21 @@ describe('Data Service Testing', () => {
         });
     });
   });
+
+  it('test that I can actually remove a class with this darn function', done => {
+    dataService.removeClass("Test Class").then(() =>{
+        firebase.database().ref().once('value', snapshot => {
+            let testClassFound = false;
+            snapshot.forEach(childSnap => {
+                if(childSnap.val() == "Test Class"){
+                    testClassFound = true;
+                    return true;
+                }else
+                    return false;
+            });
+            expect(testClassFound).toBe(false);
+            done();
+        });
+    });
+  });
 });

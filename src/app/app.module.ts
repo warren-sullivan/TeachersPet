@@ -22,6 +22,7 @@ import { AssignmentsPage } from "../pages/assignments/assignments";
 import { DataService } from '../providers/data-service';
 import { DataServiceExamplePage } from '../pages/data-service-example/data-service-example';
 
+
 import { CameraService } from '../providers/camera-service';
 
 //deleting this and the useclass in providers lets the camera work normally
@@ -34,6 +35,8 @@ class CameraMock extends Camera {
   }
 }
 
+import {StudentCreation} from "../pages/student-creation/student-creation"; // used for example usage and testing
+
 
 @NgModule({
   declarations: [
@@ -43,6 +46,9 @@ class CameraMock extends Camera {
     LoginPage,
     StudentsList,
     StudentDetail,
+
+    StudentCreation,
+
     ClassListPage,
     ClassCreationPage,
 
@@ -63,6 +69,10 @@ class CameraMock extends Camera {
     LoginPage,
     StudentsList,
     StudentDetail,
+
+    StudentCreation,
+
+
     ClassListPage,
     ClassCreationPage,
     DataServiceExamplePage,

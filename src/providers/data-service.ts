@@ -62,6 +62,17 @@ export class DataService {
     })
   }
 
+  /** removes a class from that list */
+  removeClass(className: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref(className).remove().then(data =>{
+        resolve("finished");
+      }).catch(error => {
+        reject(error.message);
+      });
+    });
+  }
+
   /** well if you have to ask, it gets a list of classes. */
   getClassList(teacher?: any): Promise<string[]> {
     return new Promise((resolve, reject) => {
