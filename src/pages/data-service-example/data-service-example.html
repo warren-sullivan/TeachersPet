@@ -27,9 +27,7 @@
   <button (click)="updateStudent()" ion-button>Update Student</button>
   <button (click)="submitGrade()" ion-button>Submit Grade</button>
   <button (click)="removeGrade()" ion-button>Remove Grade</button>
-  
-  <button (click)="camera()" ion-button>Camera</button>
-  <img src={{catUrl}}>
+  <input type="file" (change)="onChange($event)" />
 
 <p *ngIf="signedIn">Logged In</p>
 

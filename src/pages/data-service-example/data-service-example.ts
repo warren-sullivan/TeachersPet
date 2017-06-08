@@ -16,9 +16,9 @@ export class DataServiceExamplePage {
   assignmentList: Assignment[] = [];
   studentList: Student[] = [];
 
-  catUrl = null;
+  imgFile: any = null;
 
-  constructor(public dataService: DataService, public navCtrl: NavController, public navParams: NavParams, public cameraService: CameraService) {
+  constructor(public dataService: DataService, public navCtrl: NavController, public navParams: NavParams) {
     
   }
 
@@ -134,6 +134,13 @@ export class DataServiceExamplePage {
 
   refreshAssignmentList() {
     this.dataService.getAssignmentList().then(assignmentList => this.assignmentList = assignmentList);
+  }
+
+  onChange(event: any){
+
+    this.dataService.uploadImage(event.srcElement.files[0]).subscribe(data => {
+      console.log(data);
+    });
   }
 
 }
